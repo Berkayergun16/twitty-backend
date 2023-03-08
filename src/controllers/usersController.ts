@@ -1,6 +1,8 @@
 import { Request, Response } from 'express';
 import User from '../models/User';
 import jwt from 'jsonwebtoken';
+
+
 const getAllUsers = async (req: Request, res: Response) => {
     try {
         const users = await User.find();
@@ -53,22 +55,7 @@ const createUser = async (req: Request, res: Response) => {
             password,
         });
 
-        const token = await jwt.sign({ 
-            id: user._id,
-            name: user.name,
-            username: user.username,
-            email: user.email,
-        }, process.env.JWT_SECRET, {
-            expiresIn: process.env.JWT_EXPIRES_IN,
-        });
 
-        console.log(token)
-
-        res.status(201).json({
-            message: 'User created',
-            data: user,
-            token,
-        });
     } catch (err) {
         res.status(500).json({
             message: err.message,
@@ -76,8 +63,23 @@ const createUser = async (req: Request, res: Response) => {
     }
 };
 
+const loginUser = async (req: Request, res: Response) => {
+    const { email, password } = req.body;
+
+    try {
+        const user = await User.findOne({ email }).select('+password');
+
+        console.log(user);
+
+    } catch (err) {
+        res.status(500).json({
+            message: err.message,
+        });
+    }
+    
+};
 
 const updateUser = (req: Request, res: Response) => { };
 const deleteUser = (req: Request, res: Response) => { };
 
-export { getAllUsers, getUserById, createUser, updateUser, deleteUser };
+export { getAllUsers, getUserById, createUser, updateUser, deleteUser ,loginUser};

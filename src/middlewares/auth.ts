@@ -1,23 +1,41 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
+import { getAccessTokenFromHeader, isTokenIncluded } from '../helpers/authHelpers';
+import User from '../models/User';
 
-const sendJwtToClient = async(user: any, res: Response) => {
-    const token = jwt.sign({
-        id: user._id,
-        name: user.name,
-    }, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRE });
+const getAccessToRoute = async(req:Request, res:Response, next:NextFunction) => {
 
-    return res.status(200).json({
-        success: true,
-        access_token: token,
-        data: {
-            name: user.name,
-            username: user.username,
-            email: user.email,
-        }
+    if (!isTokenIncluded(req)) {
+      
+      return res.status(401).json({
+        success: false,
+        message: "Token invalid or not found"
+        });
+    }
+  
+    const access_token = getAccessTokenFromHeader(req);
+
+
+    jwt.verify(access_token, process.env.JWT_SECRET_KEY, async(err, decoded) => {
+      if (err) {
+        res.locals.user = null;
+        return res.status(401).json({
+            success: false,
+            message: "Token expired"
+        });
+      } else{
+        (<any>req).user = {
+          id: (<any>decoded).id,
+          name: (<any>decoded).name,
+        };
+        // if you use local variables, you can use res.locals.user = user;
+        let user = await User.findById((<any>decoded).id);
+        res.locals.user = user;
+        next();
+      }
+      
     });
-}
+  };
+  
 
-const isTokenIncluded = (req: Request) => {
-    return req.headers.authorization && req.headers.authorization.startsWith('Bearer:');
-}
+export { getAccessToRoute };
