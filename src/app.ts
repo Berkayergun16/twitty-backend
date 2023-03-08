@@ -1,13 +1,19 @@
-import express, {Express,Request,Response} from 'express';
+import express, { Express } from 'express';
+import dotenv from 'dotenv';
 import mainRouter from './routes/routes';
+import connectToDb from './config/database/connectToDb';
 
-const app:Express = express();
+const app: Express = express();
 
-const PORT = 5000;
+dotenv.config();
+connectToDb();
 
-app.use('/api',mainRouter);
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-app.listen(PORT,()=>{
-    console.log(`Server is running on port ${PORT}`);
+app.use('/api', mainRouter);
+
+app.listen(process.env.PORT, () => {
+    console.log(`Server is running on port ${process.env.PORT}`);
 });
 
