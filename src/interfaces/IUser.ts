@@ -6,6 +6,7 @@ export default interface IUser {
     password : string;
     createdAt: Date;
     profilePicture?: string;
+    posts?: string[];
 }
 
 // Path: src\interfaces\IUser.ts

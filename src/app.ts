@@ -1,6 +1,11 @@
+// Modules
 import express, { Express } from 'express';
 import dotenv from 'dotenv';
+
+// Routes
 import mainRouter from './routes/routes';
+
+// Database
 import connectToDb from './config/database/connectToDb';
 
 const app: Express = express();

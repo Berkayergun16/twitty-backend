@@ -1,13 +1,17 @@
+//? Modules
 import { Request, Response } from 'express';
-import { createToken } from '../helpers/authHelpers';
-import User from '../models/User';
-import comparePassword from '../helpers/comparePassword';
 import bcrypt from 'bcryptjs';
 
+// Models
+import User from '../models/User';
+
+//Middlewares
+import { createToken } from '../middlewares/auth';
+
 const registerUser = async (req: Request, res: Response) => {
-    const { name, username, email, password } = req.body;
 
     try {
+        const { name, username, email, password } = req.body;
         const user = await User.create({
             name,
             username,
@@ -58,12 +62,26 @@ const loginUser = async (req: Request, res: Response) => {
         });
     }
 
-
-
 }
 
 const logoutUser = async (req: Request, res: Response) => {
-    console.log("sdas")
+    try {
+        res.cookie("access_token", "", {
+            httpOnly: true,
+            expires: new Date(0),
+        });
+        res.locals.user = null;
+        
+        res.status(200).json({
+            success: true,
+            message: "Logged out",
+        });
+    } catch (err) {
+        res.status(500).json({
+            success: false,
+            message: err.message,
+        });
+    }
 }
 
 
