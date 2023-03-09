@@ -25,21 +25,21 @@ const getAccessToRoute = async (req: Request, res: Response, next: NextFunction)
         success: false,
         message: "Token expired"
       });
-    } else {
-      (<any>req).user = {
-        id: (<any>decoded).id,
-        name: (<any>decoded).name,
-      };
-      // if you use local variables, you can use res.locals;
-      res.locals.user = await User.findById((<any>decoded).id);
-      next();
     }
+      (<any>req).user = {
+        id: (<any>decoded).userId,
+      };
+  
+      next();
 
   });
 };
 
 // This function creates a token and sends it to the client
 const createToken = (userId: string, res: Response) => {
+
+  console.log(userId)
+
   const token = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
     expiresIn: process.env.JWT_EXPIRE,
   });

@@ -13,7 +13,10 @@ const PostSchema = new mongoose.Schema({
         ref: 'User',
         required: true,
     },
-}, { timestamps: true });
+}, 
+{
+     timestamps: true 
+});
 
 
-const Post = mongoose.model('Post', PostSchema);
+export default mongoose.model('Post', PostSchema);

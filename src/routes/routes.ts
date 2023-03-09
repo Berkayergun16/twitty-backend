@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.use('/users',usersRouter);
 router.use('/auth', authRouter);
-router.use('posts', postsRouter);
+router.use('/posts', postsRouter);
 
 router.use('*', (req, res) => {
     res.status(404).json({
