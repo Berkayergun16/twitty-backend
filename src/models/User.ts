@@ -28,6 +28,12 @@ const UserSchema  = new mongoose.Schema<IUser>({
         type: String,
         default: "",
     },
+    posts: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Post",
+        },
+    ],
 });
 
 UserSchema.pre("save", async function (next) {
