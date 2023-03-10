@@ -2,9 +2,6 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-// Models
-import User from '../models/User';
-
 //? This is the middleware that checks if the user is logged in or not
 const getAccessToRoute = async (req: Request, res: Response, next: NextFunction) => {
 
@@ -29,9 +26,8 @@ const getAccessToRoute = async (req: Request, res: Response, next: NextFunction)
       (<any>req).user = {
         id: (<any>decoded).userId,
       };
-  
-      next();
 
+      next();
   });
 };
 
