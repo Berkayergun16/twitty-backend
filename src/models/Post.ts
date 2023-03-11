@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+import mongoose , {Schema} from "mongoose";
 import IPost from './../interfaces/IPost';
 
-const PostSchema = new mongoose.Schema<IPost>({
+const PostSchema = new Schema<IPost>({
     description: {
         type: String,
         required: true,
@@ -14,18 +14,7 @@ const PostSchema = new mongoose.Schema<IPost>({
         ref: 'User',
         required: true,
     },
-    likes: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-        }
-    ],
-    comments: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Comment',
-        }
-    ]
+
 }, 
 {
      timestamps: true 

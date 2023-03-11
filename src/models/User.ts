@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
+import { Schema } from "mongoose";
 import IUser from './../interfaces/IUser';
 import bcrypt from "bcryptjs";
-const UserSchema  = new mongoose.Schema<IUser>({
+
+const UserSchema  = new Schema({
     name: {
         type: String,
         required: true,
@@ -32,12 +34,6 @@ const UserSchema  = new mongoose.Schema<IUser>({
         type: String,
         default: "",
     },
-    posts: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Post",
-        },
-    ],
 });
 
 UserSchema.pre("save", async function (next) {

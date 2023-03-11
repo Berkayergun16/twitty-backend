@@ -40,18 +40,11 @@ const getSinglePost = async (req: Request, res: Response) => {
 const createPost = async (req: Request, res: Response) => {
     try {
         const { description } = req.body;
-        const { id } = (<any>req).user;
-
-        if (!description || !id) {
-            return res.status(400).json({
-                success: false,
-                message: "Please provide description or login",
-            });
-        }
-
+        const { _id } = (<any>req).user;
+        
         const post = await Post.create({
             description,
-            user: id
+            user: _id
         });
 
         res.status(200).json({
@@ -67,7 +60,21 @@ const createPost = async (req: Request, res: Response) => {
     }
 }    
 
-
+const getPostsByUser = async (req: Request, res: Response) => { 
+    try {
+        const { _id } = (<any>req).user;
+        const posts = await Post.find({user: _id});
+        res.status(200).json({
+            success: true,
+            data: posts
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: error.message
+        });
+    }
+};
 
 
 export {getAllPosts, getSinglePost,createPost}

@@ -4,7 +4,7 @@ import User from '../models/User';
 
 const getAllUsers = async (req: Request, res: Response) => {
     try {
-        const users = await User.find();
+        const users = await User.find({});
         res.status(200).json({
             success: true,
             data: users,
@@ -43,21 +43,9 @@ const getUserById = async (req: Request, res: Response) => {
     }
 };
 
-const loginUser = async (req: Request, res: Response) => {
-    const { email, password } = req.body;
-
-    try {
-        const user = await User.findOne({ email }).select('+password');
-
-    } catch (err) {
-        res.status(500).json({
-            message: err.message,
-        });
-    }
-    
-};
 
 const updateUser = (req: Request, res: Response) => { };
 const deleteUser = (req: Request, res: Response) => { };
 
-export { getAllUsers, getUserById, updateUser, deleteUser ,loginUser};
+
+export { getAllUsers, getUserById, updateUser, deleteUser };

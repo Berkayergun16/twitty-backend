@@ -24,7 +24,7 @@ const getAccessToRoute = async (req: Request, res: Response, next: NextFunction)
       });
     }
       (<any>req).user = {
-        id: (<any>decoded).userId,
+        _id: (<any>decoded).userId,
       };
 
       next();
