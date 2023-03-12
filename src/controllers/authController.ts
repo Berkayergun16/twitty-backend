@@ -45,15 +45,13 @@ const loginUser = async (req: Request, res: Response) => {
         const user = await <any>User.findOne({ username }).select("+password");
 
         if (user && (await bcrypt.compare(password, user.password))) {
-            createToken(user._id, res);
-
-            return res.status(200).json(true);
+            createToken(user, res);
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "Incorrect username or password",
+            });
         }
-
-        return res.status(400).json({
-            success: false,
-            message: "Incorrect username or password",
-        });
 
     } catch (err) {
         res.status(500).json({
@@ -71,7 +69,7 @@ const logoutUser = async (req: Request, res: Response) => {
             expires: new Date(0),
         });
         res.locals.user = null;
-        
+
         res.status(200).json({
             success: true,
             message: "Logged out",

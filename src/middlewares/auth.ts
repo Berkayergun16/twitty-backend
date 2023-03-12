@@ -23,29 +23,42 @@ const getAccessToRoute = async (req: Request, res: Response, next: NextFunction)
         message: "Token expired"
       });
     }
-      (<any>req).user = {
-        _id: (<any>decoded).userId,
-      };
+    (<any>req).user = {
+      _id: (<any>decoded).userId,
+    };
 
-      next();
+    next();
   });
 };
 
 // This function creates a token and sends it to the client
-const createToken = (userId: string, res: Response) => {
+const createToken = (user: any, res: Response) => {
+  const { JWT_SECRET_KEY, JWT_EXPIRE, JWT_COOKIE_EXPIRE, NODE_ENV } = process.env;
 
-  console.log(userId)
 
-  const token = jwt.sign({ userId }, process.env.JWT_SECRET_KEY, {
-    expiresIn: process.env.JWT_EXPIRE,
-  });
+  const payload = {
+    id: user._id,
+    name: user.name
+  }
+  const token = jwt.sign(payload, JWT_SECRET_KEY, {
+    expiresIn: JWT_EXPIRE
+  })
 
   const options = {
-    expires: new Date(Date.now() + parseInt(process.env.JWT_COOKIE_EXPIRE) * 24 * 60 * 60 * 1000),
     httpOnly: true,
+    expires: new Date(Date.now() + parseInt(JWT_COOKIE_EXPIRE) * 1000 * 60),
+    secure: NODE_ENV === "development" ? false : true,
   }
 
-  return res.status(200).cookie('access_token', token, options)
+  return res.status(200).cookie('access_token', token, options).json({
+    success: true,
+    access_token: token,
+    data: {
+      name: user.name,
+      username: user.username,
+      email: user.email,
+    }
+  });
 
 }
 
