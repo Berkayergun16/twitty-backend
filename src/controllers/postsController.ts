@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import User from '../models/User';
 import Post from '../models/Post';
 
 
@@ -47,6 +48,12 @@ const createPost = async (req: Request, res: Response) => {
             user: _id
         });
 
+        if (post) {
+            await User.findByIdAndUpdate(_id, {
+                $push: { posts: post._id }
+            }, { new: true });
+        }
+
         res.status(200).json({
             success: true,
             data: post
@@ -60,10 +67,10 @@ const createPost = async (req: Request, res: Response) => {
     }
 }    
 
-const getPostsByUser = async (req: Request, res: Response) => { 
+const getPostsByUser = async (req: Request, res: Response) => {
     try {
         const { _id } = (<any>req).user;
-        const posts = await Post.find({user: _id});
+        const posts = await Post.find({ user: _id });
         res.status(200).json({
             success: true,
             data: posts
@@ -77,4 +84,4 @@ const getPostsByUser = async (req: Request, res: Response) => {
 };
 
 
-export {getAllPosts, getSinglePost,createPost}
+export { getAllPosts, getSinglePost, createPost }
