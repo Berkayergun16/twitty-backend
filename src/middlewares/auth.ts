@@ -24,7 +24,7 @@ const getAccessToRoute = async (req: Request, res: Response, next: NextFunction)
       });
     }
     (<any>req).user = {
-      _id: (<any>decoded).userId,
+      _id: (<any>decoded).id,
     };
 
     next();
@@ -53,11 +53,7 @@ const createToken = (user: any, res: Response) => {
   return res.status(200).cookie('access_token', token, options).json({
     success: true,
     access_token: token,
-    data: {
-      name: user.name,
-      username: user.username,
-      email: user.email,
-    }
+    user
   });
 
 }
