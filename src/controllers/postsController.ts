@@ -69,8 +69,8 @@ const createPost = async (req: Request, res: Response) => {
 
 const getPostsByUser = async (req: Request, res: Response) => {
     try {
-        const { _id } = (<any>req).user;
-        const posts = await Post.find({ user: _id });
+        const { id } = req.params;
+        const posts = await Post.find({ user: id });
         res.status(200).json({
             success: true,
             data: posts
@@ -84,4 +84,4 @@ const getPostsByUser = async (req: Request, res: Response) => {
 };
 
 
-export { getAllPosts, getSinglePost, createPost }
+export { getAllPosts, getSinglePost, createPost, getPostsByUser }
