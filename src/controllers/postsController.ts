@@ -40,16 +40,19 @@ const getSinglePost = async (req: Request, res: Response) => {
 
 const createPost = async (req: Request, res: Response) => {
     try {
-        const { description } = req.body;
-        const { _id } = (<any>req).user;
-        
+        let { description, userId } = req.body;
+
+        if ((<any>req).user) {
+            userId = (<any>req).user._id;
+        }
+
         const post = await Post.create({
             description,
-            user: _id
+            user: userId
         });
 
         if (post) {
-            await User.findByIdAndUpdate(_id, {
+            await User.findByIdAndUpdate(userId, {
                 $push: { posts: post._id }
             }, { new: true });
         }
