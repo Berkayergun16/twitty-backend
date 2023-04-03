@@ -5,4 +5,5 @@ export default interface IPost {
     user: mongoose.Schema.Types.ObjectId;
     createdAt: Date;
     updatedAt: Date;
+    likes: mongoose.Schema.Types.ObjectId[];
 }
