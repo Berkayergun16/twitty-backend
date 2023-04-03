@@ -14,6 +14,12 @@ const PostSchema = new Schema<IPost>({
         ref: 'User',
         required: true,
     },
+    likes: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User',
+        },
+    ],
 
 }, 
 {
